@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model Example {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Court {
+  id          Int           @id @default(autoincrement())
+  Covered     Boolean?      @default(false)
+  Reservation Reservation[]
+}
+
+model Client {
+  id          Int           @id @default(autoincrement())
+  Name        String
+  Premium     Boolean?      @default(false)
+  Reservation Reservation[]
+}
+
+model Reservation {
+  id       Int    @id @default(autoincrement())
+  client   Client @relation(fields: [clientId], references: [id])
+  Court    Court  @relation(fields: [courtId], references: [id])
+  clientId Int
+  courtId  Int
+  date     DateTime
+}
